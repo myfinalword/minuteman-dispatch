@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Minuteman Dispatch — Prototype</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root{
+  --navy:#16213E;
+  --navy-deep:#0E1730;
+  --parchment:#F1E9D2;
+  --parchment-dim:#E7DCC0;
+  --brass:#A9812D;
+  --brass-light:#C79F42;
+  --barn:#7A2E2E;
+  --barn-light:#9C4040;
+  --ink:#1F1B16;
+  --ink-soft:#4A4235;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--parchment);
+  font-family:'Inter',system-ui,sans-serif;
+  color:var(--ink);
+}
+
+/* ---- ticker ---- */
+.ticker-wrap{
+  background:var(--navy-deep);
+  color:var(--parchment);
+  overflow:hidden;
+  white-space:nowrap;
+  border-bottom:1px solid var(--brass);
+}
+.ticker{
+  display:inline-block;
+  padding:8px 0;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12.5px;
+  letter-spacing:0.02em;
+  animation:scroll 38s linear infinite;
+}
+.ticker span{margin-right:48px;color:var(--brass-light);}
+@keyframes scroll{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+
+/* ---- masthead ---- */
+.masthead{
+  background:var(--navy);
+  color:var(--parchment);
+  padding:28px 24px 0;
+  text-align:center;
+  border-bottom:4px double var(--brass);
+}
+.masthead .eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--brass-light);
+}
+.masthead h1{
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-size:44px;
+  margin:6px 0 4px;
+  letter-spacing:-0.01em;
+}
+.masthead .tagline{
+  font-size:14px;
+  color:var(--parchment-dim);
+  margin-bottom:20px;
+  font-style:italic;
+}
+
+/* ---- nav ---- */
+.nav{
+  display:flex;
+  justify-content:center;
+  gap:2px;
+  background:var(--navy);
+  padding:0 24px;
+}
+.nav button{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:14px;
+  background:var(--navy-deep);
+  color:var(--parchment-dim);
+  border:1px solid var(--brass);
+  border-bottom:none;
+  padding:10px 20px;
+  border-radius:8px 8px 0 0;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.nav button.active{
+  background:var(--parchment);
+  color:var(--navy);
+}
+.nav button:not(.active):hover{
+  background:#1c2a4e;
+  color:var(--parchment);
+}
+
+main{max-width:760px;margin:0 auto;padding:32px 20px 80px;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* ---- hero ---- */
+.hero{text-align:center;padding:20px 0 36px;border-bottom:1px solid var(--brass);margin-bottom:32px;}
+.hero h2{font-family:'Fraunces',serif;font-size:28px;margin:0 0 10px;color:var(--navy);}
+.hero p{color:var(--ink-soft);font-size:15px;max-width:520px;margin:0 auto 22px;line-height:1.6;}
+
+.email-form{
+  display:flex;
+  gap:8px;
+  max-width:420px;
+  margin:0 auto;
+}
+.email-form input{
+  flex:1;
+  padding:11px 14px;
+  border:1.5px solid var(--navy);
+  border-radius:6px;
+  font-size:14px;
+  font-family:'Inter',sans-serif;
+  background:#fff;
+}
+.email-form button{
+  background:var(--barn);
+  color:#fff;
+  border:none;
+  padding:11px 20px;
+  border-radius:6px;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  font-family:'Fraunces',serif;
+  white-space:nowrap;
+}
+.email-form button:hover{background:var(--barn-light);}
+.email-note{font-size:12px;color:var(--ink-soft);margin-top:10px;opacity:.8;}
+.confirm{color:var(--navy);font-weight:600;font-size:14px;margin-top:12px;display:none;}
+
+/* ---- stat strip ---- */
+.stats{display:flex;justify-content:center;gap:36px;margin:28px 0 0;flex-wrap:wrap;}
+.stat{text-align:center;}
+.stat .num{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--barn);}
+.stat .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);}
+
+/* ---- section label ---- */
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--brass);
+  border-bottom:1px solid var(--brass);
+  padding-bottom:6px;
+  margin:0 0 18px;
+}
+
+/* ---- feed cards ---- */
+.feed-item{
+  background:#fff;
+  border:1px solid #DCD2B4;
+  border-left:4px solid var(--navy);
+  border-radius:4px;
+  padding:14px 16px;
+  margin-bottom:12px;
+}
+.feed-item .meta{
+  display:flex;
+  justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--ink-soft);
+  margin-bottom:6px;
+}
+.feed-item .tag{
+  background:var(--navy);
+  color:var(--parchment);
+  padding:2px 8px;
+  border-radius:3px;
+  font-size:10px;
+  letter-spacing:.05em;
+}
+.feed-item h3{
+  font-family:'Fraunces',serif;
+  font-size:17px;
+  margin:0 0 6px;
+  color:var(--navy);
+}
+.feed-item p{font-size:13.5px;color:var(--ink-soft);margin:0 0 8px;line-height:1.5;}
+.feed-item a{font-size:12.5px;color:var(--barn);font-weight:600;text-decoration:none;}
+.feed-item a:hover{text-decoration:underline;}
+
+.rss-note{
+  background:var(--parchment-dim);
+  border:1px dashed var(--brass);
+  border-radius:6px;
+  padding:12px 14px;
+  font-size:12.5px;
+  color:var(--ink-soft);
+  margin-bottom:20px;
+}
+
+/* ---- allegedly corner ---- */
+.allegedly-banner{
+  background:var(--barn);
+  color:#fff;
+  padding:14px 16px;
+  border-radius:6px;
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:20px;
+}
+.allegedly-banner strong{font-family:'Fraunces',serif;font-size:15px;display:block;margin-bottom:4px;}
+.allegedly-item{
+  background:#fff;
+  border:1px solid #DCD2B4;
+  border-radius:4px;
+  padding:14px 16px;
+  margin-bottom:12px;
+  position:relative;
+}
+.stamp{
+  position:absolute;
+  top:10px;
+  right:12px;
+  border:2px solid var(--barn);
+  color:var(--barn);
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.08em;
+  padding:2px 8px;
+  border-radius:3px;
+  transform:rotate(6deg);
+  opacity:.85;
+}
+.allegedly-item h3{font-family:'Fraunces',serif;font-size:16px;margin:0 10px 6px 0;color:var(--navy);padding-right:80px;}
+.allegedly-item p{font-size:13.5px;color:var(--ink-soft);margin:0;line-height:1.5;}
+
+/* ---- forum ---- */
+.new-thread{
+  background:#fff;
+  border:1px solid #DCD2B4;
+  border-radius:6px;
+  padding:14px;
+  margin-bottom:22px;
+}
+.new-thread textarea{
+  width:100%;
+  border:1px solid #cfc4a2;
+  border-radius:5px;
+  padding:10px;
+  font-family:'Inter',sans-serif;
+  font-size:13.5px;
+  resize:vertical;
+  min-height:56px;
+  margin-bottom:8px;
+}
+.new-thread input.thread-name{
+  width:180px;
+  border:1px solid #cfc4a2;
+  border-radius:5px;
+  padding:8px 10px;
+  font-size:13px;
+  margin-bottom:8px;
+}
+.new-thread button{
+  background:var(--navy);
+  color:var(--parchment);
+  border:none;
+  padding:9px 18px;
+  border-radius:5px;
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:13px;
+  cursor:pointer;
+}
+.thread{
+  background:#fff;
+  border:1px solid #DCD2B4;
+  border-radius:4px;
+  padding:14px 16px;
+  margin-bottom:10px;
+}
+.thread .meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);margin-bottom:6px;}
+.thread .meta b{color:var(--navy);}
+.thread p{font-size:13.5px;margin:0;line-height:1.5;color:var(--ink);}
+.thread .replies{font-size:11.5px;color:var(--brass);margin-top:8px;font-weight:600;}
+
+footer{
+  background:var(--navy);
+  color:var(--parchment-dim);
+  text-align:center;
+  padding:34px 20px;
+  margin-top:40px;
+}
+footer .fnote{font-size:12px;opacity:.7;margin-top:14px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="ticker-wrap">
+  <div class="ticker" id="tickerEl"></div>
+</div>
+
+<div class="masthead">
+  <div class="eyebrow">Est. prototype — a home base for the overlooked majority</div>
+  <h1>The Minuteman Dispatch</h1>
+  <div class="tagline">News, tips, and a place to organize — for patriots the algorithm keeps burying.</div>
+</div>
+
+<div class="nav">
+  <button class="active" data-page="home">Home</button>
+  <button data-page="dispatch">Dispatch</button>
+  <button data-page="forum">War Room</button>
+  <button data-page="allegedly">Allegedly Corner</button>
+</div>
+
+<main>
+
+  <!-- HOME -->
+  <section class="page active" id="page-home">
+    <div class="hero">
+      <h2>Get the stories the algorithm won't surface.</h2>
+      <p>Join the Dispatch list for a weekly roundup — election integrity, government waste, censorship cases, and everything getting flagged, throttled, or ignored elsewhere.</p>
+      <div class="email-form">
+        <input type="email" id="emailInput" placeholder="you@email.com">
+        <button onclick="captureEmail()">Join the Dispatch</button>
+      </div>
+      <div class="confirm" id="emailConfirm">✓ You're on the list. Check your inbox to confirm.</div>
+      <div class="email-note">No spam. Unsubscribe anytime. This is a prototype — no emails are actually stored.</div>
+      <div class="stats">
+        <div class="stat"><div class="num">12,480</div><div class="lbl">Dispatch readers</div></div>
+        <div class="stat"><div class="num">340</div><div class="lbl">War room threads</div></div>
+        <div class="stat"><div class="num">50</div><div class="lbl">States represented</div></div>
+      </div>
+    </div>
+
+    <div class="section-label">What this site is for</div>
+    <div class="feed-item">
+      <h3>A place to read, not just scroll</h3>
+      <p>A daily-updated news wire pulling from sources you choose, a discussion board for organizing locally, and a clearly-labeled space for stories that are circulating but not yet confirmed — so unverified claims never get mixed in with reported news.</p>
+    </div>
+    <div class="feed-item">
+      <h3>Built around three principles</h3>
+      <p>1) Sourced news is labeled by outlet and date. 2) Unverified claims live only in the Allegedly Corner, clearly marked. 3) The War Room is for organizing and debate — not for anonymous pile-ons.</p>
+    </div>
+  </section>
+
+  <!-- DISPATCH -->
+  <section class="page" id="page-dispatch">
+    <div class="section-label">Dispatch — sourced news feed</div>
+    <div class="rss-note">These 9 items are real, sourced stories from Jul 2026 (dates and outlets labeled on each card) — hand-pulled as a snapshot, not a live feed yet. A true auto-updating feed needs a small server that fetches each outlet's RSS/Atom XML and serves it to the browser (direct browser-to-newsroom fetches get blocked by CORS). That server piece has to run somewhere outside this chat — see the note below the page for how to stand it up.</div>
+    <div id="feedList"></div>
+  </section>
+
+  <!-- FORUM -->
+  <section class="page" id="page-forum">
+    <div class="section-label">War Room — organize &amp; discuss</div>
+    <div class="new-thread">
+      <input class="thread-name" id="threadName" placeholder="Your name or handle">
+      <textarea id="threadBody" placeholder="Start a thread — a local action, a question, a tip..."></textarea>
+      <button onclick="postThread()">Post thread</button>
+    </div>
+    <div id="threadList"></div>
+  </section>
+
+  <!-- ALLEGEDLY -->
+  <section class="page" id="page-allegedly">
+    <div class="allegedly-banner">
+      <strong>Allegedly Corner</strong>
+      Everything below is unconfirmed — circulating claims, tips, or leaks that haven't been independently verified. Nothing here is presented as established fact. Treat it as a lead, not a source.
+    </div>
+    <div id="allegedlyList"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div style="font-family:'Fraunces',serif;font-size:18px;">Stay in the fight.</div>
+  <div class="email-form" style="margin:14px auto 0;">
+    <input type="email" id="emailInput2" placeholder="you@email.com">
+    <button onclick="captureEmail(2)">Join the Dispatch</button>
+  </div>
+  <div class="confirm" id="emailConfirm2" style="color:#F1E9D2;">✓ You're on the list.</div>
+  <div class="fnote">The Minuteman Dispatch is an independent community project, not affiliated with any campaign, party, or candidate. Sourced items in Dispatch are labeled by outlet; unverified claims are confined to the Allegedly Corner and labeled as such. This is a working prototype — no data is stored or sent anywhere.</div>
+</footer>
+
+<script>
+// ---- nav ----
+document.querySelectorAll('.nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('page-'+btn.dataset.page).classList.add('active');
+  });
+});
+
+// ---- ticker ----
+const tickerItems = [
+  "Trump calls for federal probe of 2020 Michigan voter registrations — Detroit News, Jul 16",
+  "DOGE shuts down after cutting roughly 271,000 federal jobs — The Hill, Jul 2026",
+  "Judicial Watch obtains 1,627 Jan 6 bodycam videos from DC police",
+  "Hunter Biden launches Substack disputing laptop's origins — The Hill, Jul 9",
+  "Meta ends fact-checking program, scales back content moderation — Fox News"
+];
+document.getElementById('tickerEl').innerHTML =
+  (tickerItems.map(t=>`<span>» ${t}</span>`).join('')).repeat(2);
+
+// ---- email capture (demo only, no storage) ----
+function captureEmail(which){
+  const input = document.getElementById(which===2?'emailInput2':'emailInput');
+  const confirm = document.getElementById(which===2?'emailConfirm2':'emailConfirm');
+  const val = input.value.trim();
+  if(!val || !val.includes('@')){
+    input.style.border = '1.5px solid #7A2E2E';
+    return;
+  }
+  input.style.border = '';
+  confirm.style.display = 'block';
+  input.value = '';
+}
+
+// ---- feed (placeholder data, source-labeled) ----
+const feedData = [
+  {tag:'ELECTION INTEGRITY', source:'The Detroit News', date:'Jul 16, 2026', title:'Trump calls for renewed probe of 2020 Michigan voter registrations', body:'In a national address, the president asked federal authorities to investigate voter registrations submitted in Muskegon before the 2020 election, and alleged foreign actors had accessed U.S. voter data. He has not released independent verification of the underlying claims.', url:'https://www.detroitnews.com/story/news/politics/2026/07/16/trump-calls-for-renewed-probe-into-2020-michigan-voter-registrations/90951572007/'},
+  {tag:'ELECTION INTEGRITY', source:'PJ Media', date:'Jul 16, 2026', title:'White House releases documents alleging foreign access to voter data', body:'Following the president\\'s address, the White House posted a set of previously classified records it says show foreign interference in U.S. election systems. Other outlets covering the same document release have disputed how strongly the records support the administration\\'s claims.', url:'https://pjmedia.com/matt-margolis/2026/07/16/trump-drops-bombshell-election-fraud-intel-heres-what-it-says-n4955142'},
+  {tag:'GOVERNMENT SPENDING', source:'The Hill', date:'Jul 2026', title:'DOGE formally shuts down after cutting roughly 271,000 federal jobs', body:'The Department of Government Efficiency ended operations on July 4, saying its mission to cut waste would continue elsewhere in government. Federal employment fell by more than 272,000 positions since January 2025 through hiring freezes, buyouts, and layoffs.', url:'https://thehill.com/homenews/administration/5955468-doge-shuts-down-operations/'},
+  {tag:'GOVERNMENT SPENDING', source:'The Fiscal Times', date:'Jul 6, 2026', title:'DOGE claimed $215B in savings — analysts say the real number is contested', body:'DOGE reported roughly $215 billion in identified savings before shutting down. Independent analysts cited in this piece put verified, implemented savings well below that figure once legal reversals and added transition costs are factored in.', url:'https://www.thefiscaltimes.com/2026/07/06/DOGE-Officially-Done'},
+  {tag:'HUNTER BIDEN LAPTOP', source:'The Hill', date:'Jul 9, 2026', title:'Hunter Biden launches Substack disputing the laptop\\'s origins', body:'Biden began a newsletter series revisiting the 2019 Delaware laptop, arguing its chain of custody was never established. The New York Times and Washington Post both ran independent forensic reviews in 2022 that found thousands of the emails on the device to be authentic.', url:'https://thehill.com/homenews/administration/5961433-hunter-biden-substack-essays-laptop/'},
+  {tag:'HUNTER BIDEN LAPTOP', source:'The Daily Signal', date:'Jun 1, 2026', title:'Supreme Court declines to take up case tied to the laptop', body:'The Court passed on reviewing a suit brought by a Hunter Biden associate against a former Trump aide over how information about the laptop was obtained, leaving the matter to continue in state court.', url:'https://www.dailysignal.com/2026/06/01/scotus-pass-hunter-biden-laptop/'},
+  {tag:'JAN 6', source:'Judicial Watch', date:'2026', title:'Judicial Watch obtains 1,627 Jan 6 bodycam videos from DC police', body:'The watchdog group says it secured over 1,600 hours of previously unreleased Metropolitan Police bodycam footage from January 6, 2021, through open-records litigation.', url:'https://www.judicialwatch.org/january-6-bodycam-videos/'},
+  {tag:'GOV CORRUPTION', source:'Judicial Watch', date:'2026', title:'Report: billions in FEMA COVID relief funds tied to organized fraud schemes', body:'Judicial Watch\\'s Corruption Chronicles cites findings that a significant share of FEMA pandemic relief funding was misdirected to organized fraud operations rather than intended recipients.', url:'https://www.judicialwatch.org/billions-of-dollars-in-fema-covid-relief-funds-went-to-large-organized-fraud-schemes/'},
+  {tag:'CENSORSHIP', source:'Fox News', date:'Jan 2025', title:'Meta ends fact-checking program, scales back content moderation', body:'Meta announced it would drop third-party fact-checking on Facebook, Instagram, and Threads in favor of a community-notes model, with executives acknowledging past moderation "error rates" were too high. Conservative lawmakers called it a win; fact-checking groups said they were blindsided.', url:'https://www.nbcnews.com/tech/social-media/metas-moderation-rollback-sparks-celebration-despair-rcna186539'}
+];
+document.getElementById('feedList').innerHTML = feedData.map(f=>`
+  <div class="feed-item">
+    <div class="meta"><span class="tag">${f.tag}</span><span>${f.source} · ${f.date}</span></div>
+    <h3>${f.title}</h3>
+    <p>${f.body}</p>
+    <a href="${f.url}" target="_blank" rel="noopener">Read full story →</a>
+  </div>
+`).join('');
+
+// ---- allegedly corner (placeholder) ----
+const allegedData = [
+  {title:'Sample unconfirmed claim #1', body:'Placeholder text showing how an unverified item is displayed — clearly stamped, kept separate from the sourced Dispatch feed above.'},
+  {title:'Sample unconfirmed claim #2', body:'Send me real items later and I will keep this same "stamped, disclaimed, separated" treatment so unverified content is never confused with reported news.'}
+];
+document.getElementById('allegedlyList').innerHTML = allegedData.map(a=>`
+  <div class="allegedly-item">
+    <div class="stamp">UNVERIFIED</div>
+    <h3>${a.title}</h3>
+    <p>${a.body}</p>
+  </div>
+`).join('');
+
+// ---- forum (client-side only) ----
+let threads = [
+  {name:'R. Calloway', body:'Looking for three people in Ohio to help canvas county board meetings this month — anyone local?', replies:4, time:'2h ago'},
+  {name:'M. Okafor', body:'Started a spreadsheet tracking local election-integrity volunteer trainings by state. Reply and I\\'ll add your link.', replies:11, time:'6h ago'}
+];
+function renderThreads(){
+  document.getElementById('threadList').innerHTML = threads.map(t=>`
+    <div class="thread">
+      <div class="meta"><b>${t.name}</b> · ${t.time}</div>
+      <p>${t.body}</p>
+      <div class="replies">${t.replies} replies</div>
+    </div>
+  `).join('');
+}
+function postThread(){
+  const name = document.getElementById('threadName').value.trim() || 'Anonymous';
+  const body = document.getElementById('threadBody').value.trim();
+  if(!body) return;
+  threads.unshift({name, body, replies:0, time:'just now'});
+  document.getElementById('threadBody').value = '';
+  document.getElementById('threadName').value = '';
+  renderThreads();
+}
+renderThreads();
+</script>
+
+</body>
+</html>
